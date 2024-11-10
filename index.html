@@ -1,0 +1,81 @@
+<html>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+        <title>What Format Do I Need?</title>
+        <style>
+        th,td {
+            border: 1px solid rgb(160 160 160);
+            padding: 8px 10px;
+        }
+        .row::after {
+          content: "";
+          clear: both;
+          display: table;
+        }
+        .start {
+            justify-items: center;
+            margin-bottom: 40px;
+            
+            #main { 
+                width: 100%;
+            }
+            input[type=text] {
+                width: 50%;
+            }
+            input[type=text],
+            button {
+                height: 40px;
+                @media(max-width: 992px) {
+                    height: 80px;
+                }
+            }
+            
+        }
+        
+        .prerender-checkbox {
+            margin-top: 10px;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="start">
+            <form id="main">
+                <div class="row">
+                    <input type="text" name="page" required placeholder="Enter URL">
+                    <button>Go!</button>
+                </div>
+                <div class="prerender-checkbox">
+                    <div>
+                        <input type="checkbox" id="prerender" name="prerender"/>
+                        <label for="prerender">Use Prerender to execute JS</label>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <div id="result">
+            
+        </div>
+        <script>
+        const result = document.getElementById("result");
+        document.getElementById("main").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const loader = document.createElement("span");
+            loader.innerHTML = "Loading...";
+            result.prepend(loader);
+            var formData = new FormData(e.target);
+            const value = Object.fromEntries(new FormData(e.target));
+            const host = "http://localhost:3456";
+            fetch(host+"/report?page="+value.page+"&prerender="+(value.prerender === "on" ? "1" : "0"))
+                .then(async response => {
+                    const html = await response.text();
+                    result.innerHTML = html;
+                })
+                .catch(() => {
+                    result.innerHTML = "error =(";
+                });
+        });
+        </script>
+    </body>
+</html>
