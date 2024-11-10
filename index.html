@@ -66,7 +66,6 @@
             result.prepend(loader);
             var formData = new FormData(e.target);
             const value = Object.fromEntries(new FormData(e.target));
-            const host = "http://localhost:3456";
             fetch(host+"/report?page="+value.page+"&prerender="+(value.prerender === "on" ? "1" : "0"))
                 .then(async response => {
                     const html = await response.text();
